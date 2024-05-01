@@ -13,17 +13,29 @@
 <h1><a href="../../index.html">⏪</a> Welcome to The Cat API</h1>
 
 <h2>Gatitos Aleatorios</h2>
-<div class="picture-status-container flex-center">
+<section id="randomCuteCats" class="picture-status-container flex-center">
     <picture class="flex-center">
-        <label for="cat-img" id="cat-img-error-msg"></label>
-        <img alt="Foto de gatito aleatorio" id="cat-img">
-        <img alt="Foto de gatito aleatorio" id="cat-img-2">
-        <img alt="Foto de gatito aleatorio" id="cat-img-3">
+        <article>
+            <img alt="Foto de gatito aleatorio" id="cat-img">
+            <button class="like-button" id="favButton-cat-img">
+            </button>
+        </article>
+
+        <article>
+            <img alt="Foto de gatito aleatorio" id="cat-img-2">
+            <button class="like-button" id="favButton-cat-img-2"></button>
+        </article>
+
+        <article>
+            <img alt="Foto de gatito aleatorio" id="cat-img-3">
+            <button class="like-button" id="favButton-cat-img-3"></button>
+        </article>
 
     </picture>
     <div id="spinner-cat-img" class="show"></div>
-</div>
-<button id="button-reload-cat-img">Ver otros Gatitos</button>
-</body>
+</section>
+<button id="button-reload-cat-img" class="reload-button">Ver otros Gatitos</button>
+
 <script defer src="./main.js"></script>
+</body>
 </html>
