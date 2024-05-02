@@ -35,9 +35,9 @@ function main() {
 
     // Functions
     async function fetchRamdomCuteCats(page = 0, limit = 1) {
-        spinnerStatus(spinnerRamdomCatElement, true);
+        handleSpinnerStatus(spinnerRamdomCatElement, true);
         const randomCuteCats = await getCuteCatImg(`${API}/images/search?limit=${limit}&page=${page}`);
-        spinnerStatus(spinnerRamdomCatElement, false);
+        handleSpinnerStatus(spinnerRamdomCatElement, false);
 
         if (randomCuteCats.length === 0) {
 
@@ -63,10 +63,10 @@ function main() {
     }
     async function fetchFavoritesRamdomCuteCats(page = 0, limit = 1) {
 
-        spinnerStatus(spinnerFavRamdomCatElement, true);
+        handleSpinnerStatus(spinnerFavRamdomCatElement, true);
 
         const favCuteCat = await getCuteCatImg(`${API}/favourites?limit=${limit}&page=${page}`);
-        spinnerStatus(spinnerFavRamdomCatElement, false);
+        handleSpinnerStatus(spinnerFavRamdomCatElement, false);
         if (favCuteCat.length === 0) {
 
             pictureFavoriteCuteCatsElement.classList.add('v-hidden')
@@ -104,7 +104,7 @@ function main() {
         }
     }
 
-    function spinnerStatus(spinnerElement, isShow) {
+    function handleSpinnerStatus(spinnerElement, isShow) {
         isShow
             ? spinnerElement.classList.add("show")
             : spinnerElement.classList.remove("show")
