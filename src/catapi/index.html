@@ -12,9 +12,11 @@
 <body>
 <h1><a href="../../index.html">⏪</a> Welcome to The Cat API</h1>
 
-<h2>Gatitos Aleatorios</h2>
-<section id="randomCuteCats" class="picture-status-container flex-center">
-    <picture class="flex-center">
+
+<section id="section-randomCuteCats" class="picture-status-container flex-center">
+    <h2>Gatitos Aleatorios</h2>
+    <span id="random-cat-error-msg" class="error-msg"></span>
+    <picture id="picture-randomCuteCats" class="flex-center v-hidden">
         <article>
             <img alt="Foto de gatito aleatorio" id="cat-img">
             <button class="like-button" id="favButton-cat-img">
@@ -32,9 +34,24 @@
         </article>
 
     </picture>
-    <div id="spinner-cat-img" class="show"></div>
+    <div id="spinner-cat-img" class="spinner show"></div>
+    <button id="button-reload-cat-img" class="reload-button">Ver más Gatitos</button>
 </section>
-<button id="button-reload-cat-img" class="reload-button">Ver otros Gatitos</button>
+
+
+
+<section id="section-FavoritesCuteCats" class="picture-status-container flex-center">
+    <h2>Gatitos Favoritos</h2>
+    <span id="favorite-cat-error-msg"></span>
+    <picture id="picture-FavoritesCuteCats" class="flex-center v-hidden">
+        <article>
+            <img alt="Foto de gatito aleatorio" id="fav-cat-img">
+            <button class="like-button" id="favButton-fav-cat-img">
+            </button>
+        </article>
+    </picture>
+    <div id="spinner-fav-cat-img" class="spinner show"></div>
+</section>
 
 <script defer src="./main.js"></script>
 </body>
