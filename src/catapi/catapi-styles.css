@@ -137,3 +137,10 @@ article {
 .error-msg {
     color: red;
 }
+picture article {
+    transition: all 200ms ease-in;
+}
+
+picture article:hover {
+    scale: 1.05;
+}
