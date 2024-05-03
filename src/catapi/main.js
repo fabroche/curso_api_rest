@@ -90,18 +90,19 @@ function main() {
         } else {
             spanFavoriteCatErrorMsgElement.classList.add('d-hidden')
             pictureFavoriteCuteCatsElement.classList.remove('v-hidden')
+
             pictureFavoriteCuteCatsElement.innerHTML = `
             ${favCuteCat.reverse().map(cuteCat => `
             <article>
                 <img 
                 alt="Foto de gatito aleatorio"
-                id=${cuteCat.image.id}
+                id=${cuteCat.id}
                 src=${cuteCat.image.url}
                 >
                 
                 <button 
                 class="like-button like"
-                id=favButton-${cuteCat.image.id}
+                id=favButton-${cuteCat.image.id}-${cuteCat.id}
                 >
                 </button>
             </article>
@@ -111,6 +112,26 @@ function main() {
             handleAddOnClickEventToLikeButtons()
         }
 
+    }
+
+    async function setFavoriteImg(data, buttonId) {
+
+        const newFavoriteCat = await postFavoriteCuteCatImg(`${API}/favourites`, data);
+
+        // agregandole el id unico de favorito al boton de like de la section de random cats para luego
+        // poder eliminar de favoritos desde la misma section random cats
+        const button = document.getElementById(buttonId)
+            button.id = `${button.id.split('-').slice(0,2).join('-')}-${newFavoriteCat.id}`
+
+        fetchFavoritesRamdomCuteCats()
+
+    }
+
+    async function removeFavoriteImg(cuteCatImgId) {
+
+        await deleteFavoriteCuteCatImg(`${API}/favourites/${cuteCatImgId}`);
+
+        fetchFavoritesRamdomCuteCats()
     }
 
     async function getCuteCatImg(urlApi) {
@@ -129,13 +150,6 @@ function main() {
         }
     }
 
-    async function setFavoriteImg(data) {
-
-        const favCuteCat = await postFavoriteCuteCatImg(`${API}/favourites`, data);
-
-        fetchFavoritesRamdomCuteCats()
-    }
-
     async function postFavoriteCuteCatImg(urlApi, data) {
 
         const res = await fetch(urlApi, {
@@ -145,6 +159,24 @@ function main() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
+        });
+
+        if (res.status !== 200) {
+            return false;
+
+        } else {
+            return res.json()
+        }
+    }
+
+    async function deleteFavoriteCuteCatImg(urlApi) {
+
+        const res = await fetch(urlApi, {
+            method: 'DELETE',
+            headers: {
+                "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM",
+                "Content-Type": "application/json"
+            },
         });
 
         if (res.status !== 200) {
@@ -180,13 +212,32 @@ function main() {
 
         if (classList.find(value => value === "like")) {
             e.target.classList.remove("like")
+
+            // actualizando el estado del boton like de la imagen del gatito si esta renderizado en pantalla
+            // en la section random cats
+            const randomCatImgId = e.target.id.split('-')[1]
+            const catImgElementInSectionRandom = document.getElementById(`${e.target.id}`) || document.getElementById(`favButton-${randomCatImgId}`)
+
+            console.log(catImgElementInSectionRandom)
+            if (catImgElementInSectionRandom) {
+
+                catImgElementInSectionRandom.classList.remove("like")
+
+            }
+
+            const catImgId = e.target.id.split('-')[2]
+            removeFavoriteImg(catImgId)
+
         } else {
+
             e.target.classList.add("like")
+
             // el id se obtiene al quitarle el indicador favButton- al elemento HTML
             setFavoriteImg({
-                "image_id": `${e.target.id.split('favButton-')[1]}`,
+                "image_id": `${e.target.id.split('-')[1]}`,
                 "sub_id": "fabroche"
-            })
+            }, e.target.id)
+
         }
 
 

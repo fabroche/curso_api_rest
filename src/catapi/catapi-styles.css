@@ -3,6 +3,7 @@
 }
 
 body {
+    background-color: aliceblue;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,17 +16,22 @@ body {
 
 header {
     width: 100%;
+    height: auto;
+    max-height: 20vh;
     padding: 10px;
     margin-top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     flex: 1 1;
+    background: linear-gradient(0deg, blue, blue);
+    color: aliceblue;
 }
 
 header a {
     font-size: 3.2rem;
     text-decoration: none;
+    transform: rotate(180deg);
 }
 
 header h1 {
@@ -93,6 +99,7 @@ article {
 }
 
 .reload-button {
+    font-family: sans-serif;
     width: 200px;
     height: 35px;
     border: 1px solid blue;
