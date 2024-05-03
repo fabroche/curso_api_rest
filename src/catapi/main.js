@@ -11,26 +11,17 @@ function main() {
     const pictureFavoriteCuteCatsElement = document.getElementById('picture-FavoritesCuteCats')
     const spanRandomCatErrorMsgElement = document.getElementById('random-cat-error-msg');
     const spanFavoriteCatErrorMsgElement = document.getElementById('favorite-cat-error-msg');
-    const imgElement = document.getElementById('cat-img');
-    const imgElement2 = document.getElementById('cat-img-2');
-    const imgElement3 = document.getElementById('cat-img-3');
     const reloadButtonElement = document.getElementById('button-reload-cat-img');
     const spinnerRamdomCatElement = document.getElementById('spinner-cat-img');
     const spinnerFavRamdomCatElement = document.getElementById('spinner-fav-cat-img');
-    const favButtonElement_1 = document.getElementById('favButton-cat-img')
-    const favButtonElement_2 = document.getElementById('favButton-cat-img-2')
-    const favButtonElement_3 = document.getElementById('favButton-cat-img-3')
 
 
     // EventListeners
     reloadButtonElement.addEventListener('click', () => fetchRamdomCuteCats(PAGE, LIMIT));
-    favButtonElement_1.addEventListener('click', (e) => handleFavoriteCuteCat(e))
-    favButtonElement_2.addEventListener('click', (e) => handleFavoriteCuteCat(e))
-    favButtonElement_3.addEventListener('click', (e) => handleFavoriteCuteCat(e))
 
     // App
     fetchRamdomCuteCats(PAGE, LIMIT);
-    fetchFavoritesRamdomCuteCats(PAGE, LIMIT);
+    fetchFavoritesRamdomCuteCats();
 
 
     // Functions
@@ -55,18 +46,34 @@ function main() {
 
             spanRandomCatErrorMsgElement.classList.add('d-hidden')
             pictureRandomCuteCatsElement.classList.remove('v-hidden')
-            imgElement.src = randomCuteCats[0].url;
-            imgElement2.src = randomCuteCats[1].url;
-            imgElement3.src = randomCuteCats[2].url;
+            pictureRandomCuteCatsElement.innerHTML = `
+            ${randomCuteCats.map(cuteCat => `
+            <article>
+                <img 
+                alt=${"Foto de gatito aleatorio"}
+                id=${cuteCat.id}
+                src=${cuteCat.url}
+                >
+                
+                <button 
+                class=like-button
+                id=favButton-${cuteCat.id}
+                >
+                </button>
+            </article>
+            `).join('')}
+            `
+            handleAddOnClickEventToLikeButtons()
         }
 
     }
-    async function fetchFavoritesRamdomCuteCats(page = 0, limit = 1) {
+
+    async function fetchFavoritesRamdomCuteCats() {
 
         handleSpinnerStatus(spinnerFavRamdomCatElement, true);
-
-        const favCuteCat = await getCuteCatImg(`${API}/favourites?limit=${limit}&page=${page}`);
+        const favCuteCat = await getCuteCatImg(`${API}/favourites`);
         handleSpinnerStatus(spinnerFavRamdomCatElement, false);
+
         if (favCuteCat.length === 0) {
 
             pictureFavoriteCuteCatsElement.classList.add('v-hidden')
@@ -81,11 +88,29 @@ function main() {
             spanFavoriteCatErrorMsgElement.innerText = `☹ Lo sentimos, hubo un Error al obtener tu lista de gatitos favoritos. Intentalo mas tarde.`
 
         } else {
-
             spanFavoriteCatErrorMsgElement.classList.add('d-hidden')
             pictureFavoriteCuteCatsElement.classList.remove('v-hidden')
+            pictureFavoriteCuteCatsElement.innerHTML = `
+            ${favCuteCat.reverse().map(cuteCat => `
+            <article>
+                <img 
+                alt="Foto de gatito aleatorio"
+                id=${cuteCat.image.id}
+                src=${cuteCat.image.url}
+                >
+                
+                <button 
+                class="like-button like"
+                id=favButton-${cuteCat.image.id}
+                >
+                </button>
+            </article>
+            `).join('')}
+<!--            <div class="gradient-bg"></div>-->
+            `
+            handleAddOnClickEventToLikeButtons()
         }
-        console.log(favCuteCat)
+
     }
 
     async function getCuteCatImg(urlApi) {
@@ -104,6 +129,41 @@ function main() {
         }
     }
 
+    async function setFavoriteImg(data) {
+
+        const favCuteCat = await postFavoriteCuteCatImg(`${API}/favourites`, data);
+
+        fetchFavoritesRamdomCuteCats()
+    }
+
+    async function postFavoriteCuteCatImg(urlApi, data) {
+
+        const res = await fetch(urlApi, {
+            method: 'POST',
+            headers: {
+                "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (res.status !== 200) {
+            return false;
+
+        } else {
+            return res.json()
+        }
+    }
+
+    function handleAddOnClickEventToLikeButtons() {
+        for (let button of document.getElementsByClassName('like-button')) {
+            if (!button.hasAttribute('onclick-event-assigned')) {
+                button.addEventListener('click', (e) => handleFavoriteCuteCat(e))
+                button.setAttribute('onclick-event-assigned', 'true')
+            }
+        }
+    }
+
     function handleSpinnerStatus(spinnerElement, isShow) {
         isShow
             ? spinnerElement.classList.add("show")
@@ -118,9 +178,17 @@ function main() {
             classList.push(value)
         }
 
-        classList.find(value => value === "like")
-            ? e.target.classList.remove("like")
-            : e.target.classList.add("like")
+        if (classList.find(value => value === "like")) {
+            e.target.classList.remove("like")
+        } else {
+            e.target.classList.add("like")
+            // el id se obtiene al quitarle el indicador favButton- al elemento HTML
+            setFavoriteImg({
+                "image_id": `${e.target.id.split('favButton-')[1]}`,
+                "sub_id": "fabroche"
+            })
+        }
+
 
     }
 }

@@ -12,17 +12,40 @@ body {
     height: auto;
     min-height: 100vh;
 }
+
+header {
+    width: 100%;
+    padding: 10px;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1;
+}
+
+header a {
+    font-size: 3.2rem;
+    text-decoration: none;
+}
+
+header h1 {
+    flex-grow: 2;
+}
+
 .flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .v-hidden {
     visibility: hidden;
 }
+
 .d-hidden {
     display: none;
 }
+
 img {
     width: 150px;
     max-width: 250px;
@@ -33,10 +56,12 @@ img {
     box-shadow: 4px 4px 6px 4px grey;
     flex-grow: 2;
 }
+
 h1 {
     text-align: center;
     text-justify: auto;
 }
+
 h1 a {
     text-decoration: none;
 }
@@ -60,9 +85,8 @@ article {
     position: relative;
     flex-direction: column;
     gap: 20px;
-    position: relative;
-    width: auto;
-    min-width: 250px;
+    width: 100%;
+
     height: auto;
     min-height: 150px;
     transition: all 300ms ease-in;
@@ -137,10 +161,54 @@ article {
 .error-msg {
     color: red;
 }
+
 picture article {
     transition: all 200ms ease-in;
 }
 
 picture article:hover {
     scale: 1.05;
+}
+
+.carrousel {
+    width: 75%;
+    position: relative;
+    justify-content: normal;
+    overflow-x: scroll;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    background-size: cover;
+    padding: 12px;
+}
+
+.carrousel article {
+    scroll-snap-align: center;
+}
+
+.gradient-bg {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    /*left: 0;*/
+    /*right: 0;*/
+    bottom: 0;
+    background: linear-gradient(0deg, black 1%, transparent);
+    border-radius: 8px;
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    /*background: orange; !* Color del área de seguimiento *!*/
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: blue; /* Color del thumb (deslizador) */
+    border-radius: 20px; /* Redondez del thumb */
+    border: 3px solid aliceblue; /* Crea un borde alrededor del thumb */
 }

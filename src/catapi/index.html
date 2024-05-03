@@ -10,45 +10,28 @@
     <title>The Cat Api</title>
 </head>
 <body>
-<h1><a href="../../index.html">⏪</a> Welcome to The Cat API</h1>
+<header>
+    <a href="../../index.html">⏪</a>
+    <h1> Welcome to The Cat API</h1>
+</header>
 
 
 <section id="section-randomCuteCats" class="picture-status-container flex-center">
     <h2>Gatitos Aleatorios</h2>
     <span id="random-cat-error-msg" class="error-msg"></span>
     <picture id="picture-randomCuteCats" class="flex-center v-hidden">
-        <article>
-            <img alt="Foto de gatito aleatorio" id="cat-img">
-            <button class="like-button" id="favButton-cat-img">
-            </button>
-        </article>
-
-        <article>
-            <img alt="Foto de gatito aleatorio" id="cat-img-2">
-            <button class="like-button" id="favButton-cat-img-2"></button>
-        </article>
-
-        <article>
-            <img alt="Foto de gatito aleatorio" id="cat-img-3">
-            <button class="like-button" id="favButton-cat-img-3"></button>
-        </article>
-
+        <!--    random-cute-cats-content-->
     </picture>
     <div id="spinner-cat-img" class="spinner show"></div>
     <button id="button-reload-cat-img" class="reload-button">Ver más Gatitos</button>
 </section>
 
 
-
 <section id="section-FavoritesCuteCats" class="picture-status-container flex-center">
     <h2>Gatitos Favoritos</h2>
     <span id="favorite-cat-error-msg"></span>
-    <picture id="picture-FavoritesCuteCats" class="flex-center v-hidden">
-        <article>
-            <img alt="Foto de gatito aleatorio" id="fav-cat-img">
-            <button class="like-button" id="favButton-fav-cat-img">
-            </button>
-        </article>
+    <picture id="picture-FavoritesCuteCats" class="flex-center carrousel v-hidden">
+        <!--Favourites-cat-content-->
     </picture>
     <div id="spinner-fav-cat-img" class="spinner show"></div>
 </section>
