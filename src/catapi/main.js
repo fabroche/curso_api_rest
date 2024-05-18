@@ -6,7 +6,7 @@ function main() {
     // APIs
     const API = "https://api.thecatapi.com/v1"
 
-    // DOM Elements
+    // DOM Elements (Globales)
     const pictureRandomCuteCatsElement = document.getElementById('picture-randomCuteCats')
     const pictureFavoriteCuteCatsElement = document.getElementById('picture-FavoritesCuteCats')
     const spanRandomCatErrorMsgElement = document.getElementById('random-cat-error-msg');
@@ -14,58 +14,74 @@ function main() {
     const reloadButtonElement = document.getElementById('button-reload-cat-img');
     const spinnerRamdomCatElement = document.getElementById('spinner-cat-img');
     const spinnerFavRamdomCatElement = document.getElementById('spinner-fav-cat-img');
-
-
+    const uploadFormCuteCatElement = document.getElementById('form-upload-cute-cat');
+    const spinnerFormCuteCatElement = document.getElementById('spinner-form-cat-img')
+    const formInputFileCuteCatElement = document.getElementById('file');
     // EventListeners
     reloadButtonElement.addEventListener('click', () => fetchRamdomCuteCats(PAGE, LIMIT));
+    uploadFormCuteCatElement.addEventListener('submit', (e) => handleFormSubmit(e));
+    formInputFileCuteCatElement.addEventListener('change', (e) => handleFileInputChange(e));
 
     // App
     fetchRamdomCuteCats(PAGE, LIMIT);
     fetchFavoritesRamdomCuteCats();
 
-
     // Functions
+    /**
+     * Asynchronously fetches random cute cat images.
+     *
+     * @param {number} page - The page number to fetch.
+     * @param {number} limit - The limit of images to fetch.
+     */
     async function fetchRamdomCuteCats(page = 0, limit = 1) {
+        // Show spinner
         handleSpinnerStatus(spinnerRamdomCatElement, true);
+
+        // Fetch random cute cat images
         const randomCuteCats = await getCuteCatImg(`${API}/images/search?limit=${limit}&page=${page}`);
+
+        // Hide spinner
         handleSpinnerStatus(spinnerRamdomCatElement, false);
 
+        // Check if there are no random cute cat images
         if (randomCuteCats.length === 0) {
-
-            pictureRandomCuteCatsElement.classList.add('v-hidden')
-            spanRandomCatErrorMsgElement.classList.remove('d-hidden')
-            spanRandomCatErrorMsgElement.innerText = `☹ Aún no tenemos imagenes de gatitos.`
-
-        } else if (randomCuteCats === false) {
-
-            pictureRandomCuteCatsElement.classList.add('v-hidden')
-            spanRandomCatErrorMsgElement.classList.remove('d-hidden')
-            spanRandomCatErrorMsgElement.innerText = `☹ Lo sentimos, hubo un error al obtener tus gatitos. Intentalo mas tarde.`
-
-        } else {
-
-            spanRandomCatErrorMsgElement.classList.add('d-hidden')
-            pictureRandomCuteCatsElement.classList.remove('v-hidden')
+            pictureRandomCuteCatsElement.classList.add('v-hidden');
+            spanRandomCatErrorMsgElement.classList.remove('d-hidden');
+            spanRandomCatErrorMsgElement.innerText = `☹ Aún no tenemos imagenes de gatitos.`;
+        }
+        // Check if there was an error fetching random cute cat images
+        else if (randomCuteCats === false) {
+            pictureRandomCuteCatsElement.classList.add('v-hidden');
+            spanRandomCatErrorMsgElement.classList.remove('d-hidden');
+            spanRandomCatErrorMsgElement.innerText = `☹ Lo sentimos, hubo un error al obtener tus gatitos. Inténtalo más tarde.`;
+        }
+        // Display the random cute cat images
+        else {
+            // Hide error message
+            spanRandomCatErrorMsgElement.classList.add('d-hidden');
+            // Show random cute cat images
+            pictureRandomCuteCatsElement.classList.remove('v-hidden');
+            // Render random cute cat images
             pictureRandomCuteCatsElement.innerHTML = `
             ${randomCuteCats.map(cuteCat => `
-            <article>
-                <img 
-                alt=${"Foto de gatito aleatorio"}
-                id=${cuteCat.id}
-                src=${cuteCat.url}
-                >
-                
-                <button 
-                class=like-button
-                id=favButton-${cuteCat.id}
-                >
-                </button>
-            </article>
+                <article>
+                    <img 
+                        alt=${"Foto de gatito aleatorio"}
+                        id=${cuteCat.id}
+                        src=${cuteCat.url}
+                    >
+                    
+                    <button 
+                        class=like-button
+                        id=favButton-${cuteCat.id}
+                    >
+                    </button>
+                </article>
             `).join('')}
-            `
-            handleAddOnClickEventToLikeButtons()
+        `;
+            // Add onclick event to like buttons
+            handleAddOnClickEventToLikeButtons();
         }
-
     }
 
     async function fetchFavoritesRamdomCuteCats() {
@@ -121,7 +137,7 @@ function main() {
         // agregandole el id unico de favorito al boton de like de la section de random cats para luego
         // poder eliminar de favoritos desde la misma section random cats
         const button = document.getElementById(buttonId)
-            button.id = `${button.id.split('-').slice(0,2).join('-')}-${newFavoriteCat.id}`
+        button.id = `${button.id.split('-').slice(0, 2).join('-')}-${newFavoriteCat.id}`
 
         fetchFavoritesRamdomCuteCats()
 
@@ -187,6 +203,7 @@ function main() {
         }
     }
 
+    // Status Handlers
     function handleAddOnClickEventToLikeButtons() {
         for (let button of document.getElementsByClassName('like-button')) {
             if (!button.hasAttribute('onclick-event-assigned')) {
@@ -241,6 +258,54 @@ function main() {
         }
 
 
+    }
+
+    async function handleFormSubmit(e) {
+        e.preventDefault()
+
+        handleSpinnerStatus(spinnerFormCuteCatElement, true)
+        const res = await uploadCuteCatPhoto(e);
+        handleSpinnerStatus(spinnerFormCuteCatElement, false)
+
+        console.log(res)
+    }
+
+    async function uploadCuteCatPhoto(e) {
+        const formData = new FormData(e.target);
+
+        const res = await fetch(`${API}/images/upload`, {
+            method: 'POST',
+            headers: {
+                "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM"
+            },
+            body: formData
+        });
+
+        if (res.status !== 200) {
+
+            return false;
+
+        } else {
+
+            return res.json()
+        }
+
+    }
+
+    function handleFileInputChange(e) {
+        const label = document.getElementById('label-for-file')
+        label.classList.add('flex-column')
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            label.innerHTML = `
+        <h3>${e.target.files[0].name}</h3>
+        <img src="${event.target.result}" alt="${e.target.files[0].name}" class="upload-file-preview"/>
+        `
+        }
+
+        reader.readAsDataURL(e.target.files[0])
     }
 }
 
