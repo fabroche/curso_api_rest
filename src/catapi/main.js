@@ -276,7 +276,7 @@ function main() {
         const res = await fetch(`${API}/images/upload`, {
             method: 'POST',
             headers: {
-                "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM"
+                "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM",
             },
             body: formData
         });
