@@ -4,6 +4,12 @@ function main() {
     const LIMIT = 3;
 
     // APIs
+    const catApi = axios.create({
+        baseURL: 'https://api.thecatapi.com/v1'
+    });
+
+    catApi.defaults.headers.common['x-api-key'] = 'live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM'
+
     const API = "https://api.thecatapi.com/v1"
 
     // DOM Elements (Globales)
@@ -371,21 +377,22 @@ function main() {
         const formData = new FormData(e.target);
 
         // Send a POST request to the API endpoint to upload the cat photo
-        const res = await fetch(`${API}/images/upload`, {
-            method: 'POST',
-            headers: {
-                "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM",
-            },
-            body: formData
-        });
+        const {res, status} = catApi.post('images/upload', formData)
+        // const res = await fetch(`${API}/images/upload`, {
+        //     method: 'POST',
+        //     headers: {
+        //         "x-api-key": "live_iN04OIXyxdLc5sNnKDP1FxwcjVPLbv5RKBullRyGgXvLNlztrj1ObBSPbfW1SDoM",
+        //     },
+        //     body: formData
+        // });
 
         // Check if the response status is not 200
-        if (res.status !== 200) {
+        if (status !== 200) {
             // Return false if the request fails
             return false;
         } else {
             // Parse the response body as JSON and return it
-            return res.json();
+            return res;
         }
     }
 
